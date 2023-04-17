@@ -20,8 +20,8 @@ namespace Superbstingray
 
 		public void FixedUpdate()
 		{
-            if (!VRC.SDKBase.Utilities.IsValid(localPlayer)) { return; }
-            
+			if (!VRC.SDKBase.Utilities.IsValid(localPlayer)) { return; }
+
 			pickupLeft = localPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Left);
 			pickupRight = localPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Right);
 
