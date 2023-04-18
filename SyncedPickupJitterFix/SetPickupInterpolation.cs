@@ -9,9 +9,12 @@ namespace Superbstingray
 	[UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
 	public class SetPickupInterpolation : UdonSharp.UdonSharpBehaviour
 	{
-	
+
 	public bool setKinematic;
-	bool kinematicRight, kinematicLeft, nullRight, nullLeft;
+
+	bool kinematicRight, kinematicLeft;
+	bool nullRight, nullLeft;
+	int frameSkipRight, frameSkipLeft;
 
 	VRCPlayerApi localPlayer;
 	VRC_Pickup pickupRight, pickupLeft;
@@ -26,52 +29,66 @@ namespace Superbstingray
 		{
 			if (!VRC.SDKBase.Utilities.IsValid(localPlayer)) { return; }
 
-			pickupLeft = localPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Left);
-
-			if (VRC.SDKBase.Utilities.IsValid(pickupLeft))
-			{
-				rigidLeft = pickupLeft.GetComponent<Rigidbody>();
-				rigidLeft.interpolation = RigidbodyInterpolation.None;
-				if(nullLeft)
-				{
-					kinematicLeft = rigidLeft.isKinematic;
-				}
-
-				if(setKinematic)
-				{
-					rigidLeft.isKinematic = true;
-					nullLeft = false;
-				}
-			}
-			else if (VRC.SDKBase.Utilities.IsValid(rigidLeft))
-			{
-				rigidLeft.isKinematic = kinematicLeft;
-				rigidLeft = null;
-				nullLeft = true;
-			}
-
 			pickupRight = localPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Right);
-
+ 
 			if (VRC.SDKBase.Utilities.IsValid(pickupRight))
 			{
+				frameSkipRight++;
 				rigidRight = pickupRight.GetComponent<Rigidbody>();
 				rigidRight.interpolation = RigidbodyInterpolation.None;
-				if(nullRight)
+
+				if (!nullRight && (frameSkipRight > 5))
 				{
 					kinematicRight = rigidRight.isKinematic;
 				}
 
-				if(setKinematic)
+				if (setKinematic && (frameSkipRight > 5))
 				{
 					rigidRight.isKinematic = true;
-					nullRight = false;
+					nullRight = true;
 				}
 			}
 			else if (VRC.SDKBase.Utilities.IsValid(rigidRight))
 			{
-				rigidRight.isKinematic = kinematicRight;
 				rigidRight = null;
-				nullRight = true;
+				nullRight = false;
+				frameSkipRight = 0;
+
+				if (frameSkipRight > 5)
+				{
+					rigidRight.isKinematic = kinematicRight;
+				}
+			}
+
+			pickupLeft = localPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Left);
+
+			if (VRC.SDKBase.Utilities.IsValid(pickupLeft))
+			{
+				frameSkipLeft++;
+				rigidLeft = pickupLeft.GetComponent<Rigidbody>();
+				rigidLeft.interpolation = RigidbodyInterpolation.None;
+
+				if (!nullLeft && (frameSkipRight > 5))
+				{
+					kinematicLeft = rigidLeft.isKinematic;
+				}
+
+				if (setKinematic && (frameSkipRight > 5))
+				{
+					rigidLeft.isKinematic = true;
+					nullLeft = true;
+				}
+			}
+			else if (VRC.SDKBase.Utilities.IsValid(rigidLeft))
+			{
+				rigidLeft = null;
+				nullLeft = false;
+				frameSkipLeft = 0;
+
+				if (frameSkipLeft > 5)
+				{
+					rigidLeft.isKinematic = kinematicLeft;
+				}
 			}
 		}
 	}
