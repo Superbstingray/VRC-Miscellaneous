@@ -10,6 +10,7 @@ namespace Superbstingray
 	public class SetPickupInterpolation : UdonSharp.UdonSharpBehaviour
 	{
 
+	[Tooltip("Set Synced Pickups to be Kinematic when held by the local player")]
 	public bool setKinematic;
 
 	bool kinematicRight, kinematicLeft;
