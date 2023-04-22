@@ -69,12 +69,12 @@ namespace Superbstingray
 				rigidLeft = pickupLeft.GetComponent<Rigidbody>();
 				rigidLeft.interpolation = RigidbodyInterpolation.None;
 
-				if (!nullLeft && (frameSkipRight > 5))
+				if (!nullLeft && (frameSkipLeft > 5))
 				{
 					kinematicLeft = rigidLeft.isKinematic;
 				}
 
-				if (setKinematic && (frameSkipRight > 5))
+				if (setKinematic && (frameSkipLeft > 5))
 				{
 					rigidLeft.isKinematic = true;
 					nullLeft = true;
